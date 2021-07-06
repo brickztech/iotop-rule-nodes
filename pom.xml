@@ -25,45 +25,45 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Thingsboard Rule Engine Nodes</name>
+    <name>IoToP Rule Engine Nodes</name>
     <url>https://thingsboard.io</url>
     <inceptionYear>2018</inceptionYear>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.dir>${basedir}</main.dir>
-        <thingsboard.version>3.1.0</thingsboard.version>
+        <thingsboard.version>2.5.5</thingsboard.version>
         <lombok.version>1.18.2</lombok.version>
         <guava.version>21.0</guava.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>com.brickztech.common</groupId>
             <artifactId>data</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>com.brickztech.common</groupId>
             <artifactId>message</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>com.brickztech.common</groupId>
             <artifactId>util</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.common</groupId>
+            <groupId>com.brickztech.common</groupId>
             <artifactId>dao-api</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.thingsboard.rule-engine</groupId>
+            <groupId>com.brickztech.rule-engine</groupId>
             <artifactId>rule-engine-api</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
