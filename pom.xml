@@ -69,6 +69,12 @@
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.brickztech.rule-engine</groupId>
+            <artifactId>rule-engine-components</artifactId>
+            <scope>provided</scope>
+            <version>${thingsboard.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
