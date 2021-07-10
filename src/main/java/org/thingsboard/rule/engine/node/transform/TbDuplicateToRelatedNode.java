@@ -23,10 +23,6 @@ import org.thingsboard.rule.engine.api.*;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
 import org.thingsboard.rule.engine.node.util.EntitiesRelatedEntitiesAsyncLoader;
 import org.thingsboard.rule.engine.transform.TbChangeOriginatorNodeConfiguration;
-import org.thingsboard.rule.engine.util.EntitiesAlarmOriginatorIdAsyncLoader;
-import org.thingsboard.rule.engine.util.EntitiesCustomerIdAsyncLoader;
-import org.thingsboard.rule.engine.util.EntitiesRelatedEntityIdAsyncLoader;
-import org.thingsboard.rule.engine.util.EntitiesTenantIdAsyncLoader;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
@@ -34,6 +30,9 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import static org.thingsboard.common.util.DonAsynchron.withCallback;
+import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 
 @Slf4j
 @RuleNode(
@@ -63,12 +62,22 @@ public class TbDuplicateToRelatedNode implements TbNode {
     }
 
     @Override
-    public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
-        ListenableFuture<List<EntityId>> newOrigs = getNewOriginators(ctx, msg.getOriginator());
-        for (EntityId newOrig: newOrigs.get()) {
-            TbMsg newMsg = ctx.transformMsg(msg, msg.getType(), newOrig, msg.getMetaData(), msg.getData());
-            ctx.enqueueForTellNext(newMsg, "success");
+    public void onMsg(TbContext ctx, TbMsg msg) {
+        try {
+            withCallback(
+                    getNewOriginators(ctx, msg.getOriginator()),
+                    entityIds -> transform(msg, ctx, entityIds),
+                    t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
+        } catch (Throwable th) {
+            ctx.tellFailure(msg, th);
         }
+    }
+
+    private void transform(TbMsg msg, TbContext ctx, List<EntityId> entityIds) {
+        entityIds.forEach(i -> {
+            TbMsg newMsg = ctx.transformMsg(msg, msg.getType(), i, msg.getMetaData(), msg.getData());
+            ctx.enqueueForTellNext(newMsg, SUCCESS);
+        });
         ctx.ack(msg);
     }
 
