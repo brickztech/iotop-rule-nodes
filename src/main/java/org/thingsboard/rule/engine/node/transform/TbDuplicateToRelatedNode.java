@@ -29,7 +29,6 @@ import org.thingsboard.server.common.msg.TbMsg;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
@@ -87,23 +86,14 @@ public class TbDuplicateToRelatedNode implements TbNode {
     }
 
     private ListenableFuture<List<EntityId>> getNewOriginators(TbContext ctx, EntityId original) {
-        return EntitiesRelatedEntitiesAsyncLoader.findEntityIdsAsync(ctx, original, config.getRelationsQuery());
-//        switch (config.getOriginatorSource()) {
-//            case CUSTOMER_SOURCE:
-//                return EntitiesCustomerIdAsyncLoader.findEntityIdAsync(ctx, original);
-//            case TENANT_SOURCE:
-//                return EntitiesTenantIdAsyncLoader.findEntityIdAsync(ctx, original);
-//            case RELATED_SOURCE:
-//                return EntitiesRelatedEntitiesAsyncLoader.findEntitiesAsync(ctx, original, config.getRelationsQuery());
-//            case ALARM_ORIGINATOR_SOURCE:
-//                return EntitiesAlarmOriginatorIdAsyncLoader.findEntityIdAsync(ctx, original);
-//            default:
-//                return Futures.immediateFailedFuture(new IllegalStateException("Unexpected originator source " + config.getOriginatorSource()));
-//        }
+        if (config.getOriginatorSource() == RELATED_SOURCE) {
+            return EntitiesRelatedEntitiesAsyncLoader.findEntityIdsAsync(ctx, original, config.getRelationsQuery());
+        }
+        return Futures.immediateFailedFuture(new IllegalStateException("Unexpected originator source " + config.getOriginatorSource()));
     }
 
     private void validateConfig(TbChangeOriginatorNodeConfiguration conf) {
-        HashSet<String> knownSources = Sets.newHashSet(CUSTOMER_SOURCE, TENANT_SOURCE, RELATED_SOURCE, ALARM_ORIGINATOR_SOURCE);
+        HashSet<String> knownSources = Sets.newHashSet(RELATED_SOURCE);
         if (!knownSources.contains(conf.getOriginatorSource())) {
             log.error("Unsupported source [{}] for TbDuplicateToRelatedNode", conf.getOriginatorSource());
             throw new IllegalArgumentException("Unsupported source TbDuplicateToRelatedNode" + conf.getOriginatorSource());
