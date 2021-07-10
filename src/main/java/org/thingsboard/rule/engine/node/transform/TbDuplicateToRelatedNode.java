@@ -64,8 +64,8 @@ public class TbDuplicateToRelatedNode implements TbNode {
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
-        List<EntityId> newOrigs = getNewOriginators(ctx, msg.getOriginator());
-        for (EntityId newOrig: newOrigs) {
+        ListenableFuture<List<EntityId>> newOrigs = getNewOriginators(ctx, msg.getOriginator());
+        for (EntityId newOrig: newOrigs.get()) {
             TbMsg newMsg = ctx.transformMsg(msg, msg.getType(), newOrig, msg.getMetaData(), msg.getData());
             ctx.enqueueForTellNext(newMsg, "success");
         }
@@ -77,8 +77,8 @@ public class TbDuplicateToRelatedNode implements TbNode {
 
     }
 
-    private List<EntityId> getNewOriginators(TbContext ctx, EntityId original) throws ExecutionException, InterruptedException {
-        return EntitiesRelatedEntitiesAsyncLoader.findEntities(ctx, original, config.getRelationsQuery());
+    private ListenableFuture<List<EntityId>> getNewOriginators(TbContext ctx, EntityId original) {
+        return EntitiesRelatedEntitiesAsyncLoader.findEntityIdsAsync(ctx, original, config.getRelationsQuery());
 //        switch (config.getOriginatorSource()) {
 //            case CUSTOMER_SOURCE:
 //                return EntitiesCustomerIdAsyncLoader.findEntityIdAsync(ctx, original);
