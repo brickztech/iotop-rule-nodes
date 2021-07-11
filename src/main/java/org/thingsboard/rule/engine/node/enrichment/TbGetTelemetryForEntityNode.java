@@ -1,3 +1,18 @@
+/**
+ * Copyright © 2018 The Thingsboard Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.thingsboard.rule.engine.node.enrichment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +51,7 @@ import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 
 @Slf4j
 @RuleNode(type = ComponentType.ENRICHMENT,
-        name = "originator telemetry and aggregate",
+        name = "originator telemetry and sum",
         configClazz = TbGetTelemetryForEntityNodeConfiguration.class,
         nodeDescription = "Get Entity Telemetry for selected time range, aggregate it and add it to Message Data\n",
         nodeDetails = "Test node stuff",
@@ -53,12 +68,6 @@ public class TbGetTelemetryForEntityNode implements TbNode {
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbGetTelemetryForEntityNodeConfiguration.class);
         mapper = new ObjectMapper();
-    }
-
-    private Aggregation getAggregation() {
-        if (StringUtils.isNotBlank(config.getAggregateFunction()))
-            return Aggregation.valueOf(config.getAggregateFunction());
-        return Aggregation.SUM;
     }
 
     @Override
@@ -119,6 +128,12 @@ public class TbGetTelemetryForEntityNode implements TbNode {
             case SUM: return stream.sum();
         }
         throw new IllegalArgumentException("Invalid aggregation [" + getAggregation() + "]");
+    }
+
+    private Aggregation getAggregation() {
+        if (StringUtils.isNotBlank(config.getAggregateFunction()))
+            return Aggregation.valueOf(config.getAggregateFunction());
+        return Aggregation.SUM;
     }
 
     private Double getDoubleValueFromEntity(TsKvEntry entry) {
