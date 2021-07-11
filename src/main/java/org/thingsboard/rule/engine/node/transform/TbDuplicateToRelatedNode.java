@@ -86,7 +86,7 @@ public class TbDuplicateToRelatedNode implements TbNode {
     }
 
     private ListenableFuture<List<EntityId>> getNewOriginators(TbContext ctx, EntityId original) {
-        if (config.getOriginatorSource() == RELATED_SOURCE) {
+        if (config.getOriginatorSource().equals(RELATED_SOURCE)) {
             return EntitiesRelatedEntitiesAsyncLoader.findEntityIdsAsync(ctx, original, config.getRelationsQuery());
         }
         return Futures.immediateFailedFuture(new IllegalStateException("Unexpected originator source " + config.getOriginatorSource()));
