@@ -106,6 +106,5 @@ public class TbDuplicateToRelatedNode implements TbNode {
                 throw new IllegalArgumentException("Wrong config for Related Source in TbDuplicateToRelatedNode" + conf.getOriginatorSource());
             }
         }
-
     }
 }

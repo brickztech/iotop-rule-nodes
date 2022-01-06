@@ -25,51 +25,51 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>IoToP Rule Engine Nodes</name>
+    <name>IoToP Rule Nodes</name>
     <url>https://thingsboard.io</url>
     <inceptionYear>2018</inceptionYear>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.dir>${basedir}</main.dir>
-        <thingsboard.version>2.5.5</thingsboard.version>
-        <lombok.version>1.18.2</lombok.version>
-        <guava.version>21.0</guava.version>
+        <thingsboard.version>3.3.1</thingsboard.version>
+        <lombok.version>1.18.18</lombok.version>
+        <guava.version>28.2-jre</guava.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.brickztech.common</groupId>
+            <groupId>org.thingsboard.common</groupId>
             <artifactId>data</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.brickztech.common</groupId>
+            <groupId>org.thingsboard.common</groupId>
             <artifactId>message</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.brickztech.common</groupId>
+            <groupId>org.thingsboard.common</groupId>
             <artifactId>util</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.brickztech.common</groupId>
+            <groupId>org.thingsboard.common</groupId>
             <artifactId>dao-api</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.brickztech.rule-engine</groupId>
+            <groupId>org.thingsboard.rule-engine</groupId>
             <artifactId>rule-engine-api</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.brickztech.rule-engine</groupId>
+            <groupId>org.thingsboard.rule-engine</groupId>
             <artifactId>rule-engine-components</artifactId>
             <scope>provided</scope>
             <version>${thingsboard.version}</version>
@@ -94,10 +94,21 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
+                    <version>3.8.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <release>11</release>
+                        <compilerArgs>
+                            <arg>-Xlint:deprecation</arg>
+                            <arg>-Xlint:removal</arg>
+                            <arg>-Xlint:unchecked</arg>
+                        </compilerArgs>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
             </plugins>
