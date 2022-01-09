@@ -50,13 +50,6 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
 import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 
 @Slf4j
-@RuleNode(type = ComponentType.ENRICHMENT,
-        name = "originator telemetry and sum",
-        configClazz = TbGetTelemetryForEntityNodeConfiguration.class,
-        nodeDescription = "Get Entity Telemetry for selected time range, aggregate it and add it to Message Data\n",
-        nodeDetails = "Test node stuff",
-        uiResources = {"static/rulenode/custom-nodes-config.js"},
-        configDirective = "tbEnrichmentNodeGetTelemetryAndSumConfig")
 public class TbGetTelemetryForEntityNode implements TbNode {
 
     private static final String ASC_ORDER = "ASC";

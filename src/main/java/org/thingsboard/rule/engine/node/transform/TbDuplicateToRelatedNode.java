@@ -37,26 +37,23 @@ import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
         name = "duplicate to related",
-        configClazz = TbChangeOriginatorNodeConfiguration.class,
+        configClazz = TbDuplicateToRelatedNodeConfig.class,
         nodeDescription = "Duplicates message to related entities fetched by relation query.",
         nodeDetails = "Related Entities found using configured relation direction and Relation Type. " +
                 "For each found related entity new message is created with related entity as originator and message parameters copied from original message.",
-        uiResources = {"static/rulenode/rulenode-core-config.js", "static/rulenode/rulenode-core-config.css"},
+        uiResources = {"static/rulenode/rulenode-core-config.js"},
         configDirective = "tbTransformationNodeChangeOriginatorConfig",
         icon = "find_replace"
 )
 public class TbDuplicateToRelatedNode implements TbNode {
 
-    protected static final String CUSTOMER_SOURCE = "CUSTOMER";
-    protected static final String TENANT_SOURCE = "TENANT";
     protected static final String RELATED_SOURCE = "RELATED";
-    protected static final String ALARM_ORIGINATOR_SOURCE = "ALARM_ORIGINATOR";
 
-    private TbChangeOriginatorNodeConfiguration config;
+    private TbDuplicateToRelatedNodeConfig config;
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
-        this.config = TbNodeUtils.convert(configuration, TbChangeOriginatorNodeConfiguration.class);
+        this.config = TbNodeUtils.convert(configuration, TbDuplicateToRelatedNodeConfig.class);
         validateConfig(config);
     }
 
